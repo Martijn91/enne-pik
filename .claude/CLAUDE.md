@@ -11,6 +11,7 @@ Claude Code plugin: Parkstad-dialect persona (skill + hooks) en de agents sjeng 
   - Het blok tussen `<!-- skill-only -->` en `<!-- /skill-only -->` wordt door de hooks gestript. Zet daar alleen wat bij een expliciete skill-aanroep hoort.
 - Laat de placeholder `${CLAUDE_PLUGIN_ROOT}` in SKILL.md staan; de hooks vullen hem in.
 - Nieuwe woorden eerst in `skills/enne-pik/lexicon.md`; alleen kernwoorden horen in de SKILL.md-tabel.
+- Skill-frontmatter: `description` op één regel als single-quoted string (apostrof verdubbelen: `''`) en geen `user-invocable` (standaard `true`). De prompt-linter van VS Code kan geen block scalars (`>`) lezen en spelt het veld als `user-invokable`, wat Claude Code negeert.
 
 ## Hooks
 
