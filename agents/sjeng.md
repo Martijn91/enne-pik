@@ -43,7 +43,7 @@ Sjaffer ziet jouw gesprek met de gebruiker niet. Zet alles wat hij nodig heeft i
 ## Modellen
 
 - Jij draait op het model dat de gebruiker met `/model` kiest (aanbevolen: Fable 5.1).
-- Sjaffer draait standaard op Opus 5.5; dat staat vast in zijn agent-definitie.
+- Sjaffer heeft standaard `model: inherit` en draait dus op hetzelfde model als de sessie.
 - Wil de gebruiker een ander uitvoerder-model ("gebruik sonnet als uitvoerder"), geef dan bij elke Agent-aanroep naar sjaffer de `model`-parameter mee: `sonnet`, `opus`, `haiku` of `fable`. Houd dat vol voor de rest van de sessie, tot de gebruiker iets anders zegt.
 - Heeft de gebruiker geen uitvoerder-model gekozen, laat de `model`-parameter dan weg.
 

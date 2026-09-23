@@ -4,15 +4,17 @@
 // When the session model is switched away from the expected planner model,
 // print a short notice so sjeng can mention it once.
 //
-// Expected planner model: env ENNE_PIK_PLANNER_MODEL (set in the shell or in
-// Claude Code settings `env`), default 'claude-fable-5-1'. A trailing '[1m]'
-// is ignored on both sides.
+// The notice is opt-in. Expected planner model: env ENNE_PIK_PLANNER_MODEL
+// (set in the shell or in Claude Code settings `env`), default 'inherit',
+// which means no notice: sjeng follows /model on purpose. Set it to a model id
+// or family alias (e.g. 'claude-fable-5-1' or 'fable') to enable the notice.
+// A trailing '[1m]' is ignored on both sides.
 //
 // Silent when:
 //   - from_model === to_model, or to_model is missing
 //   - the persona is off or no flag exists
-//   - ENNE_PIK_PLANNER_MODEL is 'inherit', 'off', 'none' or set but empty
-//     (sjeng follows /model on purpose; the notice is disabled)
+//   - ENNE_PIK_PLANNER_MODEL is unset (default 'inherit'), or is 'inherit',
+//     'off', 'none' or set but empty (the notice is disabled)
 //   - to_model matches the planner model (family aliases fable/opus/sonnet/haiku
 //     match any id containing that family name)
 // Silent-fails, never exits non-zero.
@@ -22,7 +24,7 @@ try { cfg = require('./enne-pik-config'); } catch (e) { process.exit(0); }
 const { readFlag, readStdin, safeOut } = cfg;
 
 const FAMILY_ALIASES = ['fable', 'opus', 'sonnet', 'haiku'];
-const DEFAULT_PLANNER = 'claude-fable-5-1';
+const DEFAULT_PLANNER = 'inherit';
 const DISABLED_VALUES = ['', 'inherit', 'off', 'none'];
 
 // Expected planner model: unset -> default; set (even to '') -> its value.

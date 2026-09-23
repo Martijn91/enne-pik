@@ -41,7 +41,7 @@ Code, comments, commits, PR's, CLI-commando's en security-waarschuwingen blijven
 
 | Wat | Hoe |
 |---|---|
-| Modellen | sjeng volgt `/model` (aanbevolen Fable 5.1); sjaffer staat vast op Opus 5.5. Ander uitvoerder-model: zeg "gebruik sonnet als uitvoerder" tegen sjeng. |
+| Modellen | sjeng volgt `/model` (aanbevolen Fable 5.1); sjaffer volgt standaard ook het sessiemodel (`inherit`). Ander uitvoerder-model: zeg "gebruik sonnet als uitvoerder" tegen sjeng. |
 | Standaardniveau | env `ENNE_PIK_DEFAULT_LEVEL` = `lite`, `vol`, `plat` of `off` (geldt als er nog geen flag-bestand is) |
 | Actief niveau | flag-bestand `$CLAUDE_CONFIG_DIR/.enne-pik-level` (standaard `~/.claude/.enne-pik-level`); verwijder het om te resetten |
 

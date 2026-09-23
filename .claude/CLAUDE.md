@@ -23,7 +23,7 @@ Claude Code plugin: Parkstad-dialect persona (skill + hooks) en de agents sjeng 
 ## Agents
 
 - sjeng schrijft nooit: houd Write, Edit en NotebookEdit in zijn `disallowedTools` en geef hem geen `memory:` (dat zet Write/Edit weer aan).
-- Geen `${user_config.*}` in agent-frontmatter: wordt in 2.1.280 niet gesubstitueerd (getest; sessie start dan niet). sjeng `model: inherit`, sjaffer `model: claude-opus-5-5`.
+- Geen `${user_config.*}` in agent-frontmatter: wordt in 2.1.280 niet gesubstitueerd (getest; sessie start dan niet). sjeng en sjaffer `model: inherit`.
 
 ## Valideren en testen
 

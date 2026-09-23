@@ -645,8 +645,14 @@ test('from === to -> empty', () => {
   assert.strictEqual(r.stdout, '');
 });
 
-test('to claude-opus-5-5, flag vol, default planner -> notice', () => {
+test('default planner is inherit -> empty', () => {
   const r = modelWatch({ from_model: 'claude-fable-5-1[1m]', to_model: 'claude-opus-5-5' }, { flag: 'vol' });
+  assert.strictEqual(r.stdout, '');
+});
+
+test('ENNE_PIK_PLANNER_MODEL=claude-fable-5-1, to claude-opus-5-5, flag vol -> notice', () => {
+  const r = modelWatch({ from_model: 'claude-fable-5-1[1m]', to_model: 'claude-opus-5-5' },
+    { flag: 'vol', env: { ENNE_PIK_PLANNER_MODEL: 'claude-fable-5-1' } });
   assert.strictEqual(r.stdout,
     'Let op: model gewisseld claude-fable-5-1[1m] → claude-opus-5-5; sjeng is ingesteld op claude-fable-5-1. ' +
     'Delegatie aan enne-pik:sjaffer blijft werken. Meld dit één keer kort in dialect.');
@@ -685,8 +691,9 @@ test('ENNE_PIK_PLANNER_MODEL=claude-opus-5-5, to fable -> notice names opus', ()
     'Let op: model gewisseld claude-opus-5-5 → claude-fable-5-1; sjeng is ingesteld op claude-opus-5-5.'
   ), r.stdout);
 });
-test('to claude-fable-5-1[1m] -> empty', () => {
-  const r = modelWatch({ from_model: 'claude-opus-5-5', to_model: 'claude-fable-5-1[1m]' }, { flag: 'vol' });
+test('ENNE_PIK_PLANNER_MODEL=claude-fable-5-1, to claude-fable-5-1[1m] -> empty', () => {
+  const r = modelWatch({ from_model: 'claude-opus-5-5', to_model: 'claude-fable-5-1[1m]' },
+    { flag: 'vol', env: { ENNE_PIK_PLANNER_MODEL: 'claude-fable-5-1' } });
   assert.strictEqual(r.stdout, '');
 });
 
@@ -700,7 +707,8 @@ test('family alias matching (planner opus / to fable alias)', () => {
   let r = modelWatch({ from_model: 'claude-fable-5-1', to_model: 'claude-opus-5-5[1m]' },
     { flag: 'vol', env: { ENNE_PIK_PLANNER_MODEL: 'opus' } });
   assert.strictEqual(r.stdout, '');
-  r = modelWatch({ from_model: 'claude-opus-5-5', to_model: 'fable' }, { flag: 'vol' });
+  r = modelWatch({ from_model: 'claude-opus-5-5', to_model: 'fable' },
+    { flag: 'vol', env: { ENNE_PIK_PLANNER_MODEL: 'claude-fable-5-1' } });
   assert.strictEqual(r.stdout, '');
   r = modelWatch({ from_model: 'claude-opus-5-5', to_model: 'claude-sonnet-5' },
     { flag: 'vol', env: { ENNE_PIK_PLANNER_MODEL: 'opus' } });

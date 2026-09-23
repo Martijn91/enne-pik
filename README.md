@@ -101,7 +101,7 @@ Rapporteer: gedaan / gewijzigde bestanden / getest / open punten
 
 Ontbreekt die kopregel, dan rapporteert sjaffer op `vol`; bij `[enne-pik: off]` in gewoon Nederlands.
 
-**Modellen kiezen.** sjeng heeft `model: inherit`: het planner-model is het model dat je met `/model` kiest of dat als `model` in je settings staat. Aanbevolen is `claude-fable-5-1[1m]` (Fable 5.1). sjaffer staat vast op `claude-opus-5-5` in `agents/sjaffer.md`.
+**Modellen kiezen.** sjeng heeft `model: inherit`: het planner-model is het model dat je met `/model` kiest of dat als `model` in je settings staat. Aanbevolen is `claude-fable-5-1[1m]` (Fable 5.1). sjaffer heeft ook `model: inherit` in `agents/sjaffer.md` en draait dus standaard op hetzelfde model als de sessie.
 
 | Wat | Hoe |
 |---|---|
@@ -109,9 +109,9 @@ Ontbreekt die kopregel, dan rapporteert sjaffer op `vol`; bij `[enne-pik: off]` 
 | Uitvoerder-model, voor deze sessie | Zeg het tegen sjeng: "gebruik sonnet als uitvoerder". Hij geeft dan bij elke delegatie de `model`-parameter mee (`sonnet`, `opus`, `haiku` of `fable`). |
 | Uitvoerder-model, permanent | Pas `model:` aan in `agents/sjaffer.md`. Bij een marketplace-install: fork de repo, of draai een aangepaste kopie met `--plugin-dir`. |
 
-Wissel je met `/model` weg van het aanbevolen planner-model, dan meldt de PostModelSwitch-hook dat één keer. Welk model als aanbevolen geldt, stel je in met de omgevingsvariabele `ENNE_PIK_PLANNER_MODEL` (standaard `claude-fable-5-1`; `inherit` of `off` betekent nooit melden).
+De PostModelSwitch-hook kan één keer melden dat je met `/model` wegwisselt van een vast planner-model. Die melding is opt-in: standaard staat `ENNE_PIK_PLANNER_MODEL` op `inherit` en komt er geen melding. Zet de omgevingsvariabele op een model-id of alias (bijvoorbeeld `claude-fable-5-1` of `fable`) om de melding aan te zetten; `inherit` of `off` zet hem weer uit.
 
-> **Waarom geen opties in `/config`?** Claude Code 2.1.280 vult `${user_config.*}`-placeholders in agent-frontmatter niet in: het model blijft dan letterlijk de placeholder en de sessie start niet. Daarom staan de modellen vast in de agent-bestanden.
+> **Waarom geen opties in `/config`?** Claude Code 2.1.280 vult `${user_config.*}`-placeholders in agent-frontmatter niet in: het model blijft dan letterlijk de placeholder en de sessie start niet. Daarom staat het model letterlijk in de agent-bestanden: beide agents hebben `model: inherit`.
 
 **Sjeng liever niet als hoofd-agent?**
 
@@ -125,14 +125,14 @@ Zonder sjeng als hoofd-agent blijft de persona werken, want de hooks draaien in 
 
 - **SessionStart** (`hooks/enne-pik-activate.js`): leest het niveau uit het flag-bestand en injecteert het bijbehorende deel van `skills/enne-pik/SKILL.md`, ook na `/compact`, `/clear` en resume.
 - **UserPromptSubmit** (`hooks/enne-pik-mode-tracker.js`): herkent `/enne-pik ...` en de aan/uit-zinnen, werkt het flag-bestand bij en geeft elke beurt een korte herinnering mee.
-- **PostModelSwitch** (`hooks/enne-pik-model-watch.js`): één melding als je wegwisselt van het aanbevolen planner-model (`ENNE_PIK_PLANNER_MODEL`).
+- **PostModelSwitch** (`hooks/enne-pik-model-watch.js`): één melding als je wegwisselt van het planner-model in `ENNE_PIK_PLANNER_MODEL`. Standaard uit (`inherit`).
 
 ## Configuratie
 
 | Wat | Waar | Effect |
 |---|---|---|
 | `ENNE_PIK_DEFAULT_LEVEL` | omgevingsvariabele | Standaardniveau: `lite`, `vol`, `plat` of `off`. Zonder deze variabele is dat `vol`. |
-| `ENNE_PIK_PLANNER_MODEL` | omgevingsvariabele | Model waarvoor de wissel-melding geldt. Standaard `claude-fable-5-1`; `inherit` of `off` zet de melding uit. |
+| `ENNE_PIK_PLANNER_MODEL` | omgevingsvariabele | Model waarvoor de wissel-melding geldt. Standaard `inherit`: geen melding. Een model-id of alias (bijvoorbeeld `claude-fable-5-1`) zet de melding aan; `inherit` of `off` zet hem uit. |
 | Flag-bestand | `$CLAUDE_CONFIG_DIR/.enne-pik-level`, standaard `~/.claude/.enne-pik-level` | Bevat het actieve niveau (`lite`, `vol`, `plat` of `off`). Wordt bijgewerkt door `/enne-pik` en de aan/uit-zinnen. |
 
 Het niveau blijft staan over sessies heen: de SessionStart-hook schrijft het flag-bestand alleen als het nog niet bestaat. `ENNE_PIK_DEFAULT_LEVEL` telt dus alleen bij de eerste start, na een reset en bij "aan" vanuit "uit". Resetten doe je door het flag-bestand te verwijderen:
