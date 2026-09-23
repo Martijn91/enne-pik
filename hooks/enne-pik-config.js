@@ -246,6 +246,17 @@ const LEVEL_ROW_RE = /^\|\s*\*\*(\S+?)\*\*[^|]*\|/;
 // Example lines: `- lite: ...`, `- vol: ...`, `- plat: ...`.
 const EXAMPLE_LINE_RE = /^- (lite|vol|plat):\s/;
 
+// SKILL.md content as the hooks see it: YAML frontmatter stripped and
+// <!-- skill-only --> ... <!-- /skill-only --> blocks removed (inclusive).
+function hookVisibleSkill(overridePath) {
+  const text = readSkill(overridePath);
+  if (!text) return '';
+  return text
+    // Frontmatter: first line `---` up to the next line that is `---`.
+    .replace(/^---[ \t]*\n[\s\S]*?\n---[ \t]*(?:\n|$)/, '')
+    .replace(/<!--\s*skill-only\s*-->[\s\S]*?<!--\s*\/skill-only\s*-->/g, '');
+}
+
 // Returns the SKILL.md body filtered for `level`:
 //   - YAML frontmatter stripped
 //   - <!-- skill-only --> ... <!-- /skill-only --> blocks removed (inclusive)
@@ -255,14 +266,8 @@ const EXAMPLE_LINE_RE = /^- (lite|vol|plat):\s/;
 // Returns '' when the file is missing or unreadable.
 function skillBody(level, overridePath) {
   try {
-    let text = readSkill(overridePath);
+    const text = hookVisibleSkill(overridePath);
     if (!text) return '';
-
-    // Strip YAML frontmatter: first line `---` up to the next line that is `---`.
-    text = text.replace(/^---[ \t]*\n[\s\S]*?\n---[ \t]*(?:\n|$)/, '');
-
-    // Remove skill-only blocks, markers included.
-    text = text.replace(/<!--\s*skill-only\s*-->[\s\S]*?<!--\s*\/skill-only\s*-->/g, '');
 
     const kept = [];
     for (const line of text.split('\n')) {
@@ -288,10 +293,11 @@ function skillBody(level, overridePath) {
   }
 }
 
-// Returns the single `| **<level>** | ... |` row from SKILL.md, or ''.
+// Returns the single `| **<level>** | ... |` row from SKILL.md (outside
+// frontmatter and skill-only blocks), or ''.
 function levelRow(level, overridePath) {
   try {
-    for (const line of readSkill(overridePath).split('\n')) {
+    for (const line of hookVisibleSkill(overridePath).split('\n')) {
       const row = line.match(LEVEL_ROW_RE);
       if (row && row[1] === level) return line.trim();
     }

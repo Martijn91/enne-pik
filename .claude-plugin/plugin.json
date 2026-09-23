@@ -5,21 +5,5 @@
   "author": { "name": "Martijn Wennekes", "url": "https://github.com/Martijn91" },
   "repository": "https://github.com/Martijn91/enne-pik",
   "license": "MIT",
-  "keywords": ["dialect", "limburgs", "heerlen", "kerkrade", "parkstad", "persona", "orchestrator"],
-  "userConfig": {
-    "planner_model": {
-      "type": "string",
-      "title": "Model sjeng (planner)",
-      "description": "Model voor de orchestrator/hoofd-agent. 'inherit' volgt je /model keuze.",
-      "default": "claude-fable-5-1[1m]",
-      "options": ["claude-fable-5-1[1m]", "claude-fable-5-1", "inherit", "opus", "sonnet"]
-    },
-    "executor_model": {
-      "type": "string",
-      "title": "Model sjaffer (uitvoerder)",
-      "description": "Model dat alle implementatie doet.",
-      "default": "claude-opus-5-5",
-      "options": ["claude-opus-5-5", "claude-opus-5-5[1m]", "opus", "sonnet", "inherit"]
-    }
-  }
+  "keywords": ["dialect", "limburgs", "heerlen", "kerkrade", "parkstad", "persona", "orchestrator"]
 }

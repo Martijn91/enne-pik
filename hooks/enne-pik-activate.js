@@ -5,7 +5,9 @@
 //   1. Resolves the level from the flag file. Only when the flag is missing is
 //      the default level resolved and written, so a chosen level persists
 //      across sessions.
-//   2. 'off' -> prints nothing.
+//   2. 'off' -> main agent: one explicit "ENNE-PIK UIT" line, because sjeng
+//      falls back to 'vol' when no ENNE-PIK context is present at all.
+//      Subagent (agent_id present): prints nothing.
 //   3. Subagent (agent_id present) -> one short reminder line.
 //   4. Otherwise -> header + SKILL.md body filtered to the active level
 //      (hardcoded fallback ruleset when SKILL.md is missing).
@@ -68,7 +70,12 @@ async function main() {
     safeWriteFlag(level);
   }
 
-  if (level === 'off') return;
+  if (level === 'off') {
+    if (!data.agent_id) {
+      safeOut('ENNE-PIK UIT. Antwoord in gewoon Nederlands, zonder dialect. Weer aan: `/enne-pik` of "enne aan".');
+    }
+    return;
+  }
 
   if (data.agent_id) {
     safeOut('ENNE-PIK ACTIEF (' + level + ') — je bent subagent: rapporteer in dialect, code/commits normaal.');

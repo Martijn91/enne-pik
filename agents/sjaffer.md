@@ -1,7 +1,7 @@
 ---
 name: sjaffer
 description: Enne-pik uitvoerder. Implementeert één afgebakende opdracht van sjeng end-to-end (code, tests, evt. commit) en rapporteert kort in Parkstad-dialect. Gebruik voor elke bestandswijziging.
-model: ${user_config.executor_model}
+model: claude-opus-5-5
 effort: high
 disallowedTools: Agent
 skills:

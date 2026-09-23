@@ -1,12 +1,18 @@
 #!/usr/bin/env node
 // enne-pik — PostModelSwitch hook.
 //
-// When the session model is switched away from the configured planner model
-// (plugin option planner_model, env CLAUDE_PLUGIN_OPTION_PLANNER_MODEL), print
-// a short notice so sjeng can mention it once. Silent when:
-//   - from_model === to_model
+// When the session model is switched away from the expected planner model,
+// print a short notice so sjeng can mention it once.
+//
+// Expected planner model: env ENNE_PIK_PLANNER_MODEL (set in the shell or in
+// Claude Code settings `env`), default 'claude-fable-5-1'. A trailing '[1m]'
+// is ignored on both sides.
+//
+// Silent when:
+//   - from_model === to_model, or to_model is missing
 //   - the persona is off or no flag exists
-//   - planner_model is 'inherit' (sjeng follows /model on purpose)
+//   - ENNE_PIK_PLANNER_MODEL is 'inherit', 'off', 'none' or set but empty
+//     (sjeng follows /model on purpose; the notice is disabled)
 //   - to_model matches the planner model (family aliases fable/opus/sonnet/haiku
 //     match any id containing that family name)
 // Silent-fails, never exits non-zero.
@@ -17,6 +23,13 @@ const { readFlag, readStdin, safeOut } = cfg;
 
 const FAMILY_ALIASES = ['fable', 'opus', 'sonnet', 'haiku'];
 const DEFAULT_PLANNER = 'claude-fable-5-1';
+const DISABLED_VALUES = ['', 'inherit', 'off', 'none'];
+
+// Expected planner model: unset -> default; set (even to '') -> its value.
+function wantedPlanner() {
+  const raw = process.env.ENNE_PIK_PLANNER_MODEL;
+  return norm(raw === undefined ? DEFAULT_PLANNER : raw);
+}
 
 function norm(s) {
   return String(s == null ? '' : s).trim().toLowerCase().replace(/\[1m\]$/, '');
@@ -44,8 +57,8 @@ async function main() {
   const level = readFlag();
   if (!level || level === 'off') return;
 
-  const wanted = norm(process.env.CLAUDE_PLUGIN_OPTION_PLANNER_MODEL || DEFAULT_PLANNER);
-  if (!wanted || wanted === 'inherit') return;
+  const wanted = wantedPlanner();
+  if (DISABLED_VALUES.includes(wanted)) return;
   if (modelMatches(to, wanted)) return;
 
   safeOut(
