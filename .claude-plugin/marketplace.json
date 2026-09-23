@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "enne-pik",
+  "description": "Parkstad-straattaal voor Claude Code: Heerlens/Kerkraads dialect (enne, auch enne, enne pik) met sjeng als planner en sjaffer als uitvoerder.",
+  "owner": {
+    "name": "Martijn Wennekes",
+    "url": "https://github.com/Martijn91"
+  },
+  "plugins": [
+    {
+      "name": "enne-pik",
+      "description": "Claude kalt Heëlesj/Kirchröadsj straattaal (enne, auch enne, enne pik) en werkt als sjeng (planner) + sjaffer (uitvoerder).",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
